@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(server *gin.Engine) {
+func RegisterMoviesRoutes(server *gin.Engine) {
 	server.POST("/create_movies", controllers.CreateMovie)
 	server.PUT("/update_movies/:id", controllers.UpdateMovie)
 	server.PATCH("/par_update_movies/:id", controllers.PatchMovie)

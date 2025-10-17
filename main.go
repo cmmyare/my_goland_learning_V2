@@ -12,8 +12,9 @@ func main() {
 	server := gin.Default()
 	server.Use(gin.Logger())
 	models.ConnectionDatabase()
-
-  routes.RegisterRoutes(server)
+ 
+  routes.RegisterMoviesRoutes(server)
+  routes.RegisterUserRoutes(server)
 	server.Run(":8080")
 	fmt.Println("server started")
 }

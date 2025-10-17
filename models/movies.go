@@ -16,7 +16,7 @@ type Movie struct {
 }
 
 func InserMovie(movie Movie) error {
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	inserted, err := collection.InsertOne(context.TODO(), movie)
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func InsertMany(movies []Movie) error {
 	for i, movie := range movies {
 		newMovies[i] = movie
 	}
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	inserted, err := collection.InsertMany(context.TODO(), newMovies)
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func InsertMany(movies []Movie) error {
 // 		"movie":  movie.Movie,
 // 		"actors": movie.Actors,
 // 	}}
-// 	collection := mongoClient.Database(db).Collection(collName)
+// 	collection := MongoClient.Database(DB).Collection("movies")
 // 	updated, err := collection.UpdateOne(context.TODO(), filter, update)
 // 	if err != nil {
 // 		return err
@@ -74,7 +74,7 @@ func UpdateMovie(movieID string, updateFields map[string]interface{}) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": updateFields}
 
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	updated, err := collection.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		return err
@@ -88,7 +88,7 @@ func UpdateMovie(movieID string, updateFields map[string]interface{}) error {
 func FindByName(movieName string) (Movie, error) {
 	var result Movie
 	filter := bson.M{"movie": movieName}
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		return result, err
@@ -106,7 +106,7 @@ func FindByID(idStr string) (Movie, error) {
 	}
 
 	filter := bson.M{"_id": id}
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 
 	err = collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
@@ -120,7 +120,7 @@ func FindByID(idStr string) (Movie, error) {
 func FindAll(movieName string) []Movie {
 	var results []Movie
 	filter := bson.D{{Key: "movie", Value: movieName}}
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	cursor, err := collection.Find(context.TODO(), filter)
 	if err != nil {
 		log.Fatal(err)
@@ -133,7 +133,7 @@ func FindAll(movieName string) []Movie {
 }
 func ListAll() ([]Movie, error) {
 	var results []Movie
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	cursor, err := collection.Find(context.TODO(), bson.M{})
 	if err != nil {
 		log.Fatal(err)
@@ -151,7 +151,7 @@ func DeleteMovie(movieID string) error {
 		return err
 	}
 	filter := bson.M{"_id": id}
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	deleted, err := collection.DeleteOne(context.TODO(), filter)
 	if err != nil {
 		return err
@@ -161,7 +161,7 @@ func DeleteMovie(movieID string) error {
 }
 
 func DeleteAll() error {
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	deleted, err := collection.DeleteMany(context.TODO(), bson.D{{}}, nil)
 	if err != nil {
 		return err
@@ -210,7 +210,7 @@ func PartialUpdateMovie(movieID string, fields map[string]interface{}) error {
 
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": set}
-	collection := mongoClient.Database(db).Collection(collName)
+	collection := MongoClient.Database(DB).Collection("movies")
 	res, err := collection.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		return err

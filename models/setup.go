@@ -11,10 +11,10 @@ import (
 )
 
 const connectionString = "mongodb://localhost:27017/movies"
-const db = "movies"
-const collName = "movies"
+const DB = "movies"
+// const collName = "movies"
 
-var mongoClient *mongo.Client
+var MongoClient *mongo.Client
 
 func ConnectionDatabase() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -34,5 +34,5 @@ func ConnectionDatabase() {
 	}
 
 	fmt.Println("Connected to MongoDB!")
-	mongoClient = client
+	MongoClient = client
 }
