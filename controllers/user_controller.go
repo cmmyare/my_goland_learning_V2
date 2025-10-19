@@ -7,6 +7,7 @@ import (
 	"github.com/cmmyare/restapi/utils"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 type CreateUserResponse struct {
 	Message  string `json:"message"`
@@ -65,21 +66,24 @@ func LoginUser(context *gin.Context) {
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
-
-	// Parse request body
 	if err := context.ShouldBindJSON(&req); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
-	// Find user by email
 	user, err := models.FindUserByEmail(req.Email)
-	if err != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
+		if err != nil {
+		if err == mongo.ErrNoDocuments {
+
+			context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
+			return
+		}
+
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
 		return
 	}
 
-	// Compare passwords
+
 	if err := utils.CompareHashAndPassword(user.Password, req.Password); err != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
@@ -91,4 +95,14 @@ func LoginUser(context *gin.Context) {
 	Username: user.Username,
 	Email:    user.Email,
 })
+}
+
+// GetAllUsers retrieves all users from the database
+func GetAllUsers(context *gin.Context) {
+	users, err := models.FindAllUsers()
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve users"})
+		return
+	}
+	context.JSON(http.StatusOK, users)
 }

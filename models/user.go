@@ -34,3 +34,25 @@ func FindUserByEmail(email string) (User, error) {
 	}
 	return user, nil
 }
+
+// find all users
+func FindAllUsers() ([]User, error) {
+	var users []User
+	collection := MongoClient.Database(DB).Collection("users")
+	cursor, err := collection.Find(context.TODO(), bson.M{})
+	if err != nil {
+		return users, err
+	}
+	defer cursor.Close(context.TODO())
+	for cursor.Next(context.TODO()) {
+		var user User
+		if err := cursor.Decode(&user); err != nil {
+			return users, err
+		}
+		users = append(users, user)
+	}
+	if err := cursor.Err(); err != nil {
+		return users, err
+	}
+	return users, nil
+}
