@@ -19,40 +19,41 @@ func CreateTask(context *gin.Context) {
 		return
 	}
 	fmt.Println("req after Json >>>>>>>>>>>>>>>>>>>>>>>", req)
+	fmt.Println("req.BookingInfo >>>>>>>>>>>>>>>>>>>>>>>", req.BookingInfo)
 
 	// --- Convert string IDs to ObjectIDs ---
-	userID, err := primitive.ObjectIDFromHex(req.UserID.Hex())
-	fmt.Println("req.UserID without Hex() >>>>>>>>>>>>>>>>>>>>>>>", req.UserID)
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
+	// userID, err := primitive.ObjectIDFromHex(req.UserID.Hex())
+	// fmt.Println("req.UserID without Hex() >>>>>>>>>>>>>>>>>>>>>>>", req.UserID)
+	// if err != nil {
+	// 	context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+	// 	return
+	// }
 
-	taskerID, err := primitive.ObjectIDFromHex(req.TaskerID.Hex())
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tasker ID"})
-		return
-	}
+	// taskerID, err := primitive.ObjectIDFromHex(req.TaskerID.Hex())
+	// if err != nil {
+	// 	context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tasker ID"})
+	// 	return
+	// }
 
-	categoryID, err := primitive.ObjectIDFromHex(req.CategoryID.Hex())
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
-		return
-	}
+	// categoryID, err := primitive.ObjectIDFromHex(req.CategoryID.Hex())
+	// if err != nil {
+	// 	context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
+	// 	return
+	// }
 
-	serviceLevelID, err := primitive.ObjectIDFromHex(req.ServiceLevelID.Hex())
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid service level ID"})
-		return
-	}
+	// serviceLevelID, err := primitive.ObjectIDFromHex(req.ServiceLevelID.Hex())
+	// if err != nil {
+	// 	context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid service level ID"})
+	// 	return
+	// }
 
 	// --- Create Task struct with converted IDs ---
 	task := models.Task{
 		ID:             primitive.NewObjectID(),
-		UserID:         userID,
-		TaskerID:       taskerID,
-		CategoryID:     categoryID,
-		ServiceLevelID: serviceLevelID,
+		UserID:         req.UserID,
+		TaskerID:       req.TaskerID,
+		CategoryID:     req.CategoryID,
+		ServiceLevelID: req.ServiceLevelID,
 		BookingInfo:    req.BookingInfo,
 	}
 
